@@ -1,8 +1,12 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js';
 import {
   createUserWithEmailAndPassword,
+  FacebookAuthProvider,
   getAuth,
-  signInWithEmailAndPassword
+  GoogleAuthProvider,
+  OAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup
 } from 'https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js';
 
 // Replace these placeholder values with the config from Firebase Console.
@@ -41,6 +45,27 @@ function firebaseMessage(error) {
   };
   return messages[error.code] || 'Something went wrong. Please try again.';
 }
+
+const providers = {
+  google: new GoogleAuthProvider(),
+  facebook: new FacebookAuthProvider(),
+  apple: new OAuthProvider('apple.com')
+};
+
+document.querySelectorAll('[data-provider]').forEach((button) => {
+  button.addEventListener('click', async () => {
+    button.disabled = true;
+    showMessage(`Opening ${button.textContent.trim()} sign in...`);
+    try {
+      await signInWithPopup(auth, providers[button.dataset.provider]);
+      showMessage('Signed in successfully.');
+    } catch (error) {
+      showMessage(firebaseMessage(error), true);
+    } finally {
+      button.disabled = false;
+    }
+  });
+});
 
 modeButton.addEventListener('click', () => {
   isSignUp = !isSignUp;

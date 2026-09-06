@@ -11,11 +11,8 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="auth-page">
-  <video class="site-bg-video site-bg-video--primary" autoplay muted loop playsinline aria-hidden="true">
+  <video class="site-bg-video" id="siteBackgroundVideo" autoplay muted playsinline aria-hidden="true">
     <source src="bed.mp4" type="video/mp4">
-  </video>
-  <video class="site-bg-video site-bg-video--secondary" autoplay muted loop playsinline aria-hidden="true">
-    <source src="bed2.mp4" type="video/mp4">
   </video>
 
   <main class="auth-shell">
@@ -37,12 +34,20 @@
         <button class="button button--dark button--full" type="submit" id="submitButton">Sign in <span>↗</span></button>
       </form>
 
+      <div class="auth-divider"><span>or continue with</span></div>
+      <div class="provider-buttons" aria-label="Social sign in options">
+        <button class="provider-button" type="button" data-provider="google"><span aria-hidden="true">G</span> Google</button>
+        <button class="provider-button" type="button" data-provider="facebook"><span aria-hidden="true">f</span> Facebook</button>
+        <button class="provider-button" type="button" data-provider="apple"><span aria-hidden="true">&#63743;</span> Apple</button>
+      </div>
+
       <p class="auth-message" id="authMessage" role="status" aria-live="polite"></p>
       <button class="auth-switch" type="button" id="modeButton">New here? Create an account</button>
       <a class="auth-home-link" href="index.html">Continue shopping <span>→</span></a>
     </section>
   </main>
 
+  <script type="module" src="background-video.js"></script>
   <script type="module" src="auth.js"></script>
 </body>
 </html>
