@@ -1,6 +1,6 @@
-// Dual-Buffer Hero Video Playlist & Single-Video Fallback Handler
+// Dual-Buffer Hero Video Playlist & Fallback Handler with Robust Error Prevention
 document.addEventListener('DOMContentLoaded', () => {
-  // Video sequence list - adjust filenames or add paths like 'videos/bed.mp4' if inside a subfolder
+  // Video playlist sources - ensure video files exist in your root or adjust path if in a subfolder (e.g., 'videos/bed.mp4')
   const playlist = [
     'bed.mp4',
     'bed2.mp4',
@@ -18,64 +18,89 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentIndex = 0;
     let activeVideo = videoA;
     let inactiveVideo = videoB;
+    let transitionInProgress = false;
 
-    function transitionToNextVideo() {
+    async function transitionToNextVideo() {
+      // Prevent overlapping triggers if multiple end events fire
+      if (transitionInProgress) return;
+      transitionInProgress = true;
+
       const nextIndex = (currentIndex + 1) % playlist.length;
       const nextSrc = playlist[nextIndex];
 
-      // Load next video silently into the hidden video tag
+      // Prepare hidden inactive video buffer
       inactiveVideo.src = nextSrc;
       inactiveVideo.load();
 
-      const handleCanPlay = () => {
-        inactiveVideo.removeEventListener('canplaythrough', handleCanPlay);
+      // Reliable ready handler with a 3-second timeout fallback (prevents stall on slow connections)
+      const loadPromise = new Promise((resolve) => {
+        let resolved = false;
+        const cleanup = () => {
+          if (resolved) return;
+          resolved = true;
+          inactiveVideo.removeEventListener('canplay', onReady);
+          inactiveVideo.removeEventListener('loadeddata', onReady);
+          resolve();
+        };
 
-        // Play hidden video in background
-        inactiveVideo.play().then(() => {
-          // Cross-fade opacity smoothly
-          inactiveVideo.classList.add('active');
-          activeVideo.classList.remove('active');
+        const onReady = () => cleanup();
+        inactiveVideo.addEventListener('canplay', onReady, { once: true });
+        inactiveVideo.addEventListener('loadeddata', onReady, { once: true });
 
-          // Swap active/inactive references
-          const temp = activeVideo;
-          activeVideo = inactiveVideo;
-          inactiveVideo = temp;
+        // Fallback timeout in case the browser delays buffering events
+        setTimeout(cleanup, 3000);
+      });
 
-          currentIndex = nextIndex;
+      await loadPromise;
 
-          // Attach listener to wait for the new video to end
-          attachEndedListener(activeVideo);
-        }).catch(err => {
-          console.warn('Playback error, skipping to next track:', err);
-          currentIndex = nextIndex;
-          transitionToNextVideo();
-        });
-      };
+      try {
+        // Attempt playback on pre-buffered hidden video
+        await inactiveVideo.play();
 
-      inactiveVideo.addEventListener('canplaythrough', handleCanPlay);
+        // Cross-fade: opacity CSS transition handles the smooth fade
+        inactiveVideo.classList.add('active');
+        activeVideo.classList.remove('active');
+
+        // Swap active and inactive references
+        const temp = activeVideo;
+        activeVideo = inactiveVideo;
+        inactiveVideo = temp;
+
+        currentIndex = nextIndex;
+      } catch (error) {
+        // Handles autoplay restrictions, Low Power Mode, or missing 404 video files
+        console.warn('Playback skipped or video file missing:', nextSrc, error);
+        currentIndex = nextIndex;
+      } finally {
+        transitionInProgress = false;
+        attachEndedListener(activeVideo);
+      }
     }
 
     function attachEndedListener(videoElement) {
+      // Clear previous listener to prevent event duplication
+      videoElement.onended = null;
       videoElement.onended = () => {
         transitionToNextVideo();
       };
     }
 
-    // Initialize end listener on primary video
+    // Initialize first video listener
     attachEndedListener(videoA);
     return;
   }
 
-  // 2. SINGLE VIDEO FALLBACK (Used on login.html background video)
+  // 2. SINGLE VIDEO FALLBACK (Used on standalone pages like login.html)
   const singleVideo = document.getElementById('siteBackgroundVideo');
   if (singleVideo) {
     let singleIndex = 0;
-
     singleVideo.addEventListener('ended', () => {
       singleIndex = (singleIndex + 1) % playlist.length;
       singleVideo.src = playlist[singleIndex];
       singleVideo.load();
-      singleVideo.play().catch(() => {});
+      singleVideo.play().catch((err) => {
+        console.warn('Single video playback error:', err);
+      });
     });
   }
 });
