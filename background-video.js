@@ -1,4 +1,4 @@
-// Automated Pexels Video Fetcher & Dual-Buffer Hero Player
+// Automated Pexels Video Fetcher & Dual-Buffer Hero Player + Site Background Controller
 document.addEventListener('DOMContentLoaded', () => {
   // ----------------------------------------------------
   // 1. PEXELS API CONFIGURATION
@@ -6,38 +6,45 @@ document.addEventListener('DOMContentLoaded', () => {
   // Paste your key below to search and pull fresh videos automatically!
   // ----------------------------------------------------
   const PEXELS_API_KEY = 'so8Mg4TKSYCt9cOPmZOYY9yvrZlZetwTtD0IaR4wNqX9kM1tXOq1AvKD'; 
-const SEARCH_TERMS = ['bedsheet', 'bed sheets', 'bedding set', 'duvet cover', 'fitted sheet',
-   'pillowcase', 'comforter', 'quilt', 'linen bedding', 'cotton sheets', 'silk sheets', 'soft fabric texture',
-    'white linen fabric', 'fabric close up', 'cozy bedroom', 'luxury bedroom', 'minimalist bedroom',
-     'bedroom morning light', 'making the bed', 'clean bedroom interior', 'hotel room bed', 'pillow luxury',
-      'fluffy pillows', 'pillow fight', 'pillow close up', 'winter bedding cozy', 'summer bed sheets',
-       'rainy day bedroom', 'sunlight bedroom window', '5 star hotel bed', 'resort bedroom',
-        'interior design bedroom', 'home decor bedroom'];
-
-  // Fallback playlist if offline or before API key is added
-  let playlist = [
+const SEARCH_TERMS = ['bedsheet', 'bed sheets', 'bedding set', 'duvet cover', 'fitted sheet', 
+  'pillowcase', 'comforter', 'quilt', 'linen bedding', 'cotton sheets', 'silk sheets',
+   'soft fabric texture', 'white linen fabric', 'fabric close up', 'cozy bedroom',
+    'luxury bedroom', 'minimalist bedroom', 'bedroom morning light', 'making the bed',
+     'clean bedroom interior', 'hotel room bed', 'pillow luxury', 'fluffy pillows',
+      'pillow fight', 'pillow close up', 'winter bedding cozy', 'summer bed sheets', 'rainy day bedroom',
+       'sunlight bedroom window', '5 star hotel bed', 'resort bedroom', 'interior design bedroom',
+        'home decor bedroom'];
+  // Fallback playlists for Hero and Full-Site background
+  let heroPlaylist = [
     'https://assets.mixkit.co/videos/preview/mixkit-cozy-bedroom-with-made-bed-41584-large.mp4',
     'https://assets.mixkit.co/videos/preview/mixkit-hands-adjusting-sheets-on-a-bed-41582-large.mp4',
     'bed.mp4',
-    'bed2.mp4'
+    'bed2.mp4',
+    'bed3.mp4'
+  ];
+
+  let bgPlaylist = [
+    'https://assets.mixkit.co/videos/preview/mixkit-curtains-moving-with-the-wind-in-a-room-41585-large.mp4',
+    'https://assets.mixkit.co/videos/preview/mixkit-cozy-bedroom-with-made-bed-41584-large.mp4',
+    'bed4.mp4',
+    'bed5.mp4'
   ];
 
   // ----------------------------------------------------
   // 2. AUTOMATIC PEXELS VIDEO SEARCH FUNCTION
   // ----------------------------------------------------
   async function fetchPexelsVideos() {
-    if (!PEXELS_API_KEY || PEXELS_API_KEY === 'YOUR_PEXELS_API_KEY_HERE') {
-      console.log('Pexels API Key not set. Using built-in video playlist.');
+    if (!PEXELS_API_KEY || PEXELS_API_KEY === 'so8Mg4TKSYCt9cOPmZOYY9yvrZlZetwTtD0IaR4wNqX9kM1tXOq1AvKD') {
+      console.log('Pexels API Key not set. Running with built-in atmospheric video playlists.');
       return;
     }
 
     try {
-      // Pick a random search term
       const randomQuery = SEARCH_TERMS[Math.floor(Math.random() * SEARCH_TERMS.length)];
-      console.log(`Searching Pexels automatically for: "${randomQuery}"...`);
+      console.log(`Searching Pexels automatically for background videos: "${randomQuery}"...`);
 
       const response = await fetch(
-        `https://api.pexels.com/videos/search?query=${encodeURIComponent(randomQuery)}&per_page=12&orientation=landscape`,
+        `https://api.pexels.com/videos/search?query=${encodeURIComponent(randomQuery)}&per_page=16&orientation=landscape`,
         {
           headers: {
             Authorization: PEXELS_API_KEY
@@ -53,7 +60,6 @@ const SEARCH_TERMS = ['bedsheet', 'bed sheets', 'bedding set', 'duvet cover', 'f
         const fetchedUrls = [];
 
         data.videos.forEach((video) => {
-          // Find HD or suitable MP4 file quality
           const mp4File =
             video.video_files.find((f) => f.quality === 'hd' && f.file_type === 'video/mp4') ||
             video.video_files.find((f) => f.file_type === 'video/mp4');
@@ -64,8 +70,9 @@ const SEARCH_TERMS = ['bedsheet', 'bed sheets', 'bedding set', 'duvet cover', 'f
         });
 
         if (fetchedUrls.length > 0) {
-          playlist = fetchedUrls;
-          console.log(`Successfully auto-loaded ${playlist.length} bedding videos from Pexels!`);
+          heroPlaylist = fetchedUrls;
+          bgPlaylist = [...fetchedUrls].reverse(); // Reverse for subtle variation
+          console.log(`Successfully loaded ${heroPlaylist.length} videos from Pexels!`);
         }
       }
     } catch (error) {
@@ -74,7 +81,29 @@ const SEARCH_TERMS = ['bedsheet', 'bed sheets', 'bedding set', 'duvet cover', 'f
   }
 
   // ----------------------------------------------------
-  // 3. DUAL-VIDEO HERO CROSS-FADE LOGIC
+  // 3. FULL-SITE ATMOSPHERIC BACKGROUND VIDEO CONTROLLER
+  // ----------------------------------------------------
+  const siteBgVideo = document.getElementById('siteBgVideo');
+  if (siteBgVideo) {
+    let bgIndex = 0;
+
+    function cycleSiteBackground() {
+      bgIndex = (bgIndex + 1) % bgPlaylist.length;
+      siteBgVideo.classList.add('is-transitioning');
+
+      setTimeout(() => {
+        siteBgVideo.src = bgPlaylist[bgIndex];
+        siteBgVideo.load();
+        siteBgVideo.play().catch(() => {});
+        siteBgVideo.classList.remove('is-transitioning');
+      }, 700);
+    }
+
+    siteBgVideo.onended = cycleSiteBackground;
+  }
+
+  // ----------------------------------------------------
+  // 4. DUAL-VIDEO HERO CROSS-FADE LOGIC
   // ----------------------------------------------------
   const videoA = document.getElementById('heroVideoA');
   const videoB = document.getElementById('heroVideoB');
@@ -86,12 +115,13 @@ const SEARCH_TERMS = ['bedsheet', 'bed sheets', 'bedding set', 'duvet cover', 'f
     let transitionInProgress = false;
 
     async function initHeroPlayer() {
-      // Try to auto-fetch fresh Pexels videos first
       await fetchPexelsVideos();
 
-      // Ensure initial video is set
-      if (playlist.length > 0) {
-        videoA.src = playlist[0];
+      if (heroPlaylist.length > 0) {
+        videoA.src = heroPlaylist[0];
+      }
+      if (siteBgVideo && bgPlaylist.length > 0) {
+        siteBgVideo.src = bgPlaylist[0];
       }
 
       attachEndedListener(activeVideo);
@@ -101,14 +131,12 @@ const SEARCH_TERMS = ['bedsheet', 'bed sheets', 'bedding set', 'duvet cover', 'f
       if (transitionInProgress) return;
       transitionInProgress = true;
 
-      const nextIndex = (currentIndex + 1) % playlist.length;
-      const nextSrc = playlist[nextIndex];
+      const nextIndex = (currentIndex + 1) % heroPlaylist.length;
+      const nextSrc = heroPlaylist[nextIndex];
 
-      // Prepare hidden inactive video buffer
       inactiveVideo.src = nextSrc;
       inactiveVideo.load();
 
-      // Ready handler with timeout fallback for slow network connections
       const loadPromise = new Promise((resolve) => {
         let resolved = false;
         const cleanup = () => {
@@ -123,7 +151,6 @@ const SEARCH_TERMS = ['bedsheet', 'bed sheets', 'bedding set', 'duvet cover', 'f
         inactiveVideo.addEventListener('canplay', onReady, { once: true });
         inactiveVideo.addEventListener('loadeddata', onReady, { once: true });
 
-        // 4-second network timeout fallback
         setTimeout(cleanup, 4000);
       });
 
@@ -132,11 +159,9 @@ const SEARCH_TERMS = ['bedsheet', 'bed sheets', 'bedding set', 'duvet cover', 'f
       try {
         await inactiveVideo.play();
 
-        // Perform smooth 1.2s cross-fade
         inactiveVideo.classList.add('active');
         activeVideo.classList.remove('active');
 
-        // Swap active and inactive references
         const temp = activeVideo;
         activeVideo = inactiveVideo;
         inactiveVideo = temp;
@@ -159,5 +184,28 @@ const SEARCH_TERMS = ['bedsheet', 'bed sheets', 'bedding set', 'duvet cover', 'f
     }
 
     initHeroPlayer();
+  }
+
+  // ----------------------------------------------------
+  // 5. COZY SOUNDSCAPE AUDIO TOGGLE CONTROLLER
+  // ----------------------------------------------------
+  const soundToggle = document.getElementById('ambientSoundToggle');
+  const ambientAudio = document.getElementById('ambientAudio');
+
+  if (soundToggle && ambientAudio) {
+    soundToggle.addEventListener('click', () => {
+      if (ambientAudio.paused) {
+        ambientAudio.play().then(() => {
+          soundToggle.classList.add('is-playing');
+          soundToggle.setAttribute('aria-label', 'Mute ambient sound');
+          soundToggle.title = 'Mute cozy ambient sound';
+        }).catch(err => console.log('Audio autoplay prevented by browser:', err));
+      } else {
+        ambientAudio.pause();
+        soundToggle.classList.remove('is-playing');
+        soundToggle.setAttribute('aria-label', 'Play ambient sound');
+        soundToggle.title = 'Play cozy ambient sound';
+      }
+    });
   }
 });

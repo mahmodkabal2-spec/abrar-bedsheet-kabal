@@ -5,19 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Abrar Bedsheet Kabal offers beautiful, comfortable bedsheets near Bilal Masjid Kabal City Center Kabal Swat.">
   <title>Abrar Bedsheet Kabal | Premium Bedsheets</title>
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=8">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- Fixed Full-Page Atmospheric Ambient Background Video -->
+  <video id="siteBgVideo" class="site-bg-video" autoplay muted playsinline loop src="https://assets.mixkit.co/videos/preview/mixkit-cozy-bedroom-with-made-bed-41584-large.mp4"></video>
+
+  <!-- Cozy Ambient Soundscape Audio Source -->
+  <audio id="ambientAudio" loop src="https://assets.mixkit.co/active_storage/sfx/2515/2515-preview.mp3"></audio>
+
   <div class="announcement">Complimentary delivery on orders over $100 <span>•</span> Thoughtfully made in small batches</div>
   <header class="site-header" id="siteHeader">
     <div class="container nav-wrap">
       <button class="icon-button mobile-menu-button" id="menuButton" aria-label="Open navigation" aria-expanded="false">☰</button>
       <a class="wordmark" href="#home" aria-label="Abrar Bedsheet Kabal home"><img class="brand-logo" src="logo.png" alt="Abrar Bedsheet Kabal logo"><span class="wordmark__main">Abrar</span><span class="wordmark__sub">Bedsheet Kabal</span></a>
       <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation"><a href="#shop">Shop all</a><a href="#collections">Collections</a><a href="#story">Our standard</a><a href="#journal">Journal</a><a href="#contact">Contact</a><a href="login.html">Account</a></nav>
-      <div class="nav-actions"><button class="icon-button theme-button" id="themeButton" aria-label="Switch to dark theme" title="Change theme">☾</button><button class="icon-button" id="searchButton" aria-label="Open search">⌕</button><button class="icon-button wishlist-button" id="wishlistButton" aria-label="View wishlist">♡<span class="action-count" id="wishlistCount">0</span></button><button class="cart-button" id="cartButton" aria-label="Open shopping bag">Bag <span id="cartCount">0</span></button></div>
+      <div class="nav-actions">
+        <!-- Ambient Soundscape Toggle Button -->
+        <button class="icon-button sound-button" id="ambientSoundToggle" aria-label="Play ambient sound" title="Play cozy ambient sound">♫</button>
+        <button class="icon-button theme-button" id="themeButton" aria-label="Switch to dark theme" title="Change theme">☾</button>
+        <button class="icon-button" id="searchButton" aria-label="Open search">⌕</button>
+        <button class="icon-button wishlist-button" id="wishlistButton" aria-label="View wishlist">♡<span class="action-count" id="wishlistCount">0</span></button>
+        <button class="cart-button" id="cartButton" aria-label="Open shopping bag">Bag <span id="cartCount">0</span></button>
+      </div>
     </div>
     <div class="search-panel" id="searchPanel"><div class="container search-inner"><label for="searchInput">Search the collection</label><input id="searchInput" type="search" placeholder="Try “linen”, “sage”, or “quilt”" autocomplete="off"><button class="icon-button" id="closeSearch" aria-label="Close search">×</button></div></div>
   </header>
@@ -35,7 +48,7 @@
         <div class="bed-scene" aria-label="A softly moving sequence of layered bedding videos">
           <div class="bed-scene__glow"></div>
           
-          <!-- Dual Video Container for Seamless Cross-Fading -->
+          <!-- Dual Video Hero Container for Smooth Cross-Fading -->
           <div class="hero__image-wrap">
             <video id="heroVideoA" class="hero-video active" autoplay muted playsinline src="bed.mp4"></video>
             <video id="heroVideoB" class="hero-video" muted playsinline></video>

@@ -120,18 +120,23 @@ width: min(90%, 1240px);
 margin-inline: auto;
 }
 
-/* STREAMING_CHUNK:Styling background video and header navigation... */
+/* STREAMING_CHUNK:Styling atmospheric background video and header navigation... */
 .site-bg-video {
-opacity: 0.18;
+opacity: 0.16;
 position: fixed;
 inset: 0;
-width: 100%;
-height: 100%;
+width: 100vw;
+height: 100vh;
 object-fit: cover;
 z-index: 0;
 pointer-events: none;
-filter: saturate(1.1) brightness(0.92);
-transition: opacity 0.9s ease;
+filter: saturate(1.15) brightness(0.92);
+transition: opacity 0.8s ease;
+}
+
+:root[data-theme="dark"] .site-bg-video {
+opacity: 0.10;
+filter: saturate(1.2) brightness(0.7) contrast(1.1);
 }
 
 .site-bg-video.is-transitioning {
@@ -162,7 +167,7 @@ margin: 0 12px;
 }
 
 .site-header {
-background: #fffdf8;
+background: rgba(255, 253, 248, 0.92);
 border-bottom: 1px solid #d9d5cc;
 box-shadow: 0 8px 24px rgba(32, 33, 29, 0.08);
 position: sticky;
@@ -172,6 +177,10 @@ backdrop-filter: blur(14px);
 transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
+:root[data-theme="dark"] .site-header {
+background: rgba(17, 19, 17, 0.92);
+}
+
 .nav-wrap {
 align-items: center;
 display: flex;
@@ -179,7 +188,6 @@ height: 82px;
 justify-content: space-between;
 }
 
-/* STREAMING_CHUNK:Styling wordmark, brand logo, and action buttons... */
 .wordmark {
 align-items: center;
 display: inline-flex;
@@ -248,6 +256,22 @@ line-height: 1;
 min-height: 36px;
 min-width: 32px;
 position: relative;
+}
+
+.sound-button {
+color: var(--clay);
+font-size: 1.25rem;
+transition: transform 0.2s;
+}
+
+.sound-button.is-playing {
+animation: pulseSound 1.8s ease-in-out infinite;
+color: #28b463;
+}
+
+@keyframes pulseSound {
+0%, 100% { transform: scale(1); }
+50% { transform: scale(1.2); }
 }
 
 .mobile-menu-button {
@@ -458,7 +482,6 @@ width: 180px;
 z-index: 1;
 }
 
-/* Hero Image Wrap Container */
 .hero__image-wrap {
 animation: beddingDrift 9s ease-in-out infinite;
 height: 100%;
@@ -468,7 +491,6 @@ transform: translateZ(0) scale(1.02);
 width: 100%;
 }
 
-/* Dual Video Stacking & Seamless Cross-fade Styling */
 .hero-video {
 position: absolute;
 top: 0;
@@ -484,13 +506,11 @@ z-index: 1;
 animation: fabricBreath 9s ease-in-out infinite;
 }
 
-/* Active Video State */
 .hero-video.active {
 opacity: 1;
 z-index: 2;
 }
 
-/* STREAMING_CHUNK:Styling badges, overlays, and hero caption... */
 .bed-scene__float {
 animation: floatBadge 6s ease-in-out infinite;
 background: rgba(244, 242, 237, 0.88);
@@ -640,7 +660,7 @@ font: 0.9rem var(--sans);
 margin-left: 10px;
 }
 
-/* STREAMING_CHUNK:Styling shop toolbar, filter tabs, and sort controls... */
+/* STREAMING_CHUNK:Styling shop toolbar, filter tabs, and product cards... */
 .shop-section {
 background: var(--paper);
 padding-top: 30px;
@@ -691,7 +711,6 @@ outline: 0;
 padding-left: 6px;
 }
 
-/* STREAMING_CHUNK:Configuring product cards, swatches, and quick add button... */
 .product-grid {
 display: grid;
 gap: 34px 18px;
@@ -1449,7 +1468,6 @@ width: 100%;
 .footer__bottom { gap: 8px; flex-direction: column; margin-top: 50px; }
 }
 
-/* STREAMING_CHUNK:Configuring mobile header and grid layout breakpoints... */
 @media (max-width: 500px) {
 .announcement { font-size: 0.57rem; }
 .wordmark__main { font-size: 1.4rem; }
@@ -1471,181 +1489,4 @@ width: 100%;
 .cart-drawer { padding: 25px 20px; }
 .search-inner label { font-size: 0.9rem; }
 .search-inner { gap: 8px; }
-}
-
-/* STREAMING_CHUNK:Styling user authentication card and provider buttons... */
-.auth-page {
-min-height: 100vh;
-overflow: hidden;
-}
-
-.auth-shell {
-align-items: center;
-display: flex;
-flex-direction: column;
-justify-content: center;
-min-height: 100vh;
-padding: 40px 20px;
-position: relative;
-z-index: 1;
-}
-
-.auth-wordmark {
-margin-bottom: 28px;
-}
-
-.auth-card {
-background: rgba(255, 254, 250, 0.92);
-box-shadow: 0 24px 80px rgba(32, 33, 29, 0.18);
-max-width: 460px;
-padding: clamp(30px, 6vw, 58px);
-width: 100%;
-}
-
-:root[data-theme="dark"] .auth-card {
-background: rgba(25, 27, 24, 0.94);
-}
-
-.auth-card h1 {
-font-size: clamp(2.5rem, 8vw, 4.2rem);
-}
-
-.auth-intro {
-color: var(--muted);
-font-size: 0.88rem;
-margin: 20px 0 30px;
-max-width: 330px;
-}
-
-.auth-form {
-display: flex;
-flex-direction: column;
-gap: 9px;
-}
-
-.auth-form label {
-font-size: 0.7rem;
-font-weight: 700;
-letter-spacing: 0.08em;
-margin-top: 8px;
-text-transform: uppercase;
-}
-
-.auth-form input {
-background: transparent;
-border: 0;
-border-bottom: 1px solid var(--line);
-outline: 0;
-padding: 12px 0;
-}
-
-.auth-form input:focus {
-border-color: var(--clay);
-}
-
-.auth-form .button {
-margin-top: 21px;
-}
-
-.auth-form .button:disabled {
-cursor: wait;
-opacity: 0.6;
-}
-
-.auth-divider {
-align-items: center;
-color: var(--muted);
-display: flex;
-font-size: 0.65rem;
-gap: 12px;
-justify-content: center;
-margin: 25px 0 15px;
-text-transform: uppercase;
-}
-
-.auth-divider::before,
-.auth-divider::after {
-background: var(--line);
-content: '';
-height: 1px;
-width: 100%;
-}
-
-.provider-buttons {
-display: grid;
-gap: 8px;
-grid-template-columns: repeat(3, 1fr);
-}
-
-.provider-button {
-align-items: center;
-background: transparent;
-border: 1px solid var(--line);
-display: flex;
-flex-direction: column;
-font-size: 0.64rem;
-gap: 5px;
-justify-content: center;
-min-height: 70px;
-transition: border-color 0.2s, transform 0.2s;
-}
-
-.provider-button:hover {
-border-color: var(--clay);
-transform: translateY(-2px);
-}
-
-.provider-button span {
-font-size: 1.15rem;
-font-weight: 700;
-}
-
-.provider-button[data-provider="facebook"] span {
-color: #1877f2;
-font-family: Arial, sans-serif;
-}
-
-.provider-button[data-provider="apple"] span {
-font-size: 1.35rem;
-}
-
-.auth-message {
-color: var(--clay);
-font-size: 0.75rem;
-min-height: 20px;
-padding-top: 16px;
-}
-
-.auth-message.is-error {
-color: #a44f43;
-}
-
-.auth-switch,
-.auth-home-link {
-background: none;
-color: var(--muted);
-display: block;
-font-size: 0.7rem;
-margin-top: 16px;
-text-align: center;
-width: 100%;
-}
-
-.auth-switch:hover,
-.auth-home-link:hover {
-color: var(--clay);
-}
-
-.auth-home-link {
-color: var(--ink);
-font-weight: 700;
-letter-spacing: 0.04em;
-margin-top: 28px;
-text-transform: uppercase;
-}
-
-.auth-home-link span {
-color: var(--clay);
-font-size: 1rem;
-margin-left: 8px;
 }
