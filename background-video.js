@@ -6,7 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Paste your key below to search and pull fresh videos automatically!
   // ----------------------------------------------------
   const PEXELS_API_KEY = 'so8Mg4TKSYCt9cOPmZOYY9yvrZlZetwTtD0IaR4wNqX9kM1tXOq1AvKD'; 
-  const SEARCH_TERMS = ['bedsheet', 'cozy bedroom', 'bed sheets', 'linen bedding'];
+const SEARCH_TERMS = ['bedsheet', 'bed sheets', 'bedding set', 'duvet cover', 'fitted sheet',
+   'pillowcase', 'comforter', 'quilt', 'linen bedding', 'cotton sheets', 'silk sheets', 'soft fabric texture',
+    'white linen fabric', 'fabric close up', 'cozy bedroom', 'luxury bedroom', 'minimalist bedroom',
+     'bedroom morning light', 'making the bed', 'clean bedroom interior', 'hotel room bed', 'pillow luxury',
+      'fluffy pillows', 'pillow fight', 'pillow close up', 'winter bedding cozy', 'summer bed sheets',
+       'rainy day bedroom', 'sunlight bedroom window', '5 star hotel bed', 'resort bedroom',
+        'interior design bedroom', 'home decor bedroom'];
 
   // Fallback playlist if offline or before API key is added
   let playlist = [
