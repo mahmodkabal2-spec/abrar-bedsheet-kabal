@@ -68,7 +68,7 @@ border-color: var(--ink);
 
 /* STREAMING_CHUNK:Setting global resets and body styling... */
 
-{
+* {
 box-sizing: border-box;
 margin: 0;
 padding: 0;
@@ -752,6 +752,7 @@ top: 13px;
 .heart-button {
 background: rgba(255, 254, 250, 0.9);
 border-radius: 50%;
+color: var(--ink);
 font-size: 1.3rem;
 height: 36px;
 position: absolute;
@@ -762,6 +763,17 @@ width: 36px;
 
 .heart-button.is-liked {
 color: var(--clay);
+}
+
+:root[data-theme="dark"] .heart-button,
+body.dark-mode .heart-button {
+background: rgba(40, 40, 40, 0.9);
+color: #fff;
+}
+
+:root[data-theme="dark"] .heart-button.is-liked,
+body.dark-mode .heart-button.is-liked {
+color: #fff;
 }
 
 .quick-add {
@@ -778,6 +790,17 @@ text-transform: uppercase;
 transform: translateY(8px);
 transition: opacity 0.25s, transform 0.25s;
 width: 100%;
+}
+
+:root[data-theme="dark"] .quick-add,
+body.dark-mode .quick-add {
+background: rgba(30, 30, 30, 0.95);
+color: #ffffff;
+}
+
+:root[data-theme="dark"] .quick-add span,
+body.dark-mode .quick-add span {
+color: #ffffff;
 }
 
 .quick-add span {
